@@ -1,0 +1,189 @@
+<html lang="fr"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Devoir de Rois Mages (Q54) : consignes</title>
+    <!-- CSS de Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <style>
+        body {
+            padding: 8px;
+            background-color: white;
+            color:black;
+        }
+        h3, h4, h5, h6 {
+            color:blue;
+        }
+        span.main {
+            font-weight: bold;
+        }
+        p.rem, span.rem {
+            font-style: italic;
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            border: 1px black solid;
+        }
+        table td, table th {
+            border: 1px black solid;
+        }
+    </style>
+
+<script src="chrome-extension://hmdmhilocobgohohpdpolmibjklfgkbi/pageScript.js"></script></head>
+<body>
+
+<h3>4IPO3 : Devoir des Rois Mages (Q54)</h3>
+<h4>Enoncé du groupe POOO</h4>
+<h5>But</h5>
+
+<p>Convertir une application procédurale en application orientée objet.</p>
+<p>Thème : le jeu de la vie</p>
+
+<h5>Points pédagogiques clés :</h5>
+
+<ul>
+    <li>Attributs et méthodes privés, avec accesseurs éventuels.</li>
+    <li>Aggrégation : Le jeu est un ensemble d'objets. </li>
+    <li>Composition : La grille est un ensemble de cellules.
+    </li><li>Héritage et Polymorphisme : Il peut y avoir différents types de cellule à implanter,
+    enfants d'une classe abstraite.
+    </li><li>Design Pattern : <code>Facture</code>, <code>Iterator</code>, <code>Singleton</code>, <code>Observer</code> sont implantables.</li>
+    <li>Graphical User Interface &amp; programmation événementielle</li>
+</ul>
+
+<h5>Point de départ</h5>
+
+<p><strong><a target="_blank" href="https://moodle.isfce.be/mod/folder/view.php?id=30542">Téléchargez
+      ici les fichiers</a></strong> à tester ou à compléter.</p>
+
+<p>Vous trouvez dans ce répertoire :
+</p><ul>
+    <li><code>GameOfLife_procedural.py</code> : une version procédurale (non-objet) mais fonctionnelle du jeu de la vie
+        <ul>
+            <li>Cette version procédurale donne les spécifications 'utilisateur' du jeu.
+                La version POO doit avant tout répondre aux même spécifications.</li>
+        </ul>
+
+    </li><li><code>MvcGenericArchitecture.png</code> : une architecture MVC générique</li>
+
+    <li><code>MvcSample_oop.py</code> : un exemple d'application événementielle développée sous architecture MVC
+        <ul><li>C'est le point de départ pour ce devoir.</li></ul>
+
+    </li><li><code>GameOfLife_MvcArchitecture.png</code> : une architecture MVC du jeu de la vie à développer</li>
+</ul>
+
+<h5>Consignes</h5>
+
+<ol>
+
+
+<li><span class="main"> Fichiers à rendre </span><p></p><ul>
+  <li> <code>liveview.py</code> : avec toutes les classes 'view' </li>
+  <li> <code>livemodel.py</code> : avec toutes les classes 'model' </li>
+  <li> <code>livecontroller.py</code> : avec toutes les classes 'controller' </li>
+  <li> <code>livecounter.py</code> : avec le compteur éventuel </li>
+  <li> <code>main.py</code> : le code nécessaire uniquement pour lancer l'application (le controlleur) </li>
+</ul><p></p>
+<p class="rem"> Remarque : Il peut y avoir plusieurs classes par fichier <code>py</code>. </p>
+</li>
+<li><span class="main"> Mvc </span><p></p><ul>
+  <li> Développer ce jeu de la vie en POO sous architecture MVC, telle que vue au cours. </li>
+  <li> Implanter dans <code>LiveModel</code> une matrice de cellules avec les indices standards (0, 1, 2, 3 ...).  De son côté, <code>LiveView</code> peut conserver la matrice pixelisée du code de départ (indices 0, 10, 20, 30, ...). </li>
+</ul><p></p>
+</li>
+<li><span class="main"> Interface utilisateur </span><p></p><ul>
+  <li> L'utilisateur peut modifier la couleur des cellules (vivante/morte) ou de la grille. </li>
+</ul><p></p>
+</li>
+<li><span class="main"> Canvas </span><p></p><ul>
+  <li> Implanter l'itération de sortie (affichage de la matrice)    avec le design pattern <code>Iterator</code> appliqué à l'objet nécessaire (par ex.  <code>LiveCanvas</code>). </li>
+</ul><p></p>
+</li>
+<li><span class="main"> Stratégie </span><p></p><ul>
+  <li> Proposer au départ une 'configuration aléatoire' : 25% des cellules vivantes au départ, dispersées aléatoirement.  <br>Indice : s'inspirer de <code>canon</code>, càd introduire à côté du bouton 'Canon' un autre bouton 'Aléa'.  <br>Indice : classe <code>LiveModel</code>  <br>Bonus : appliquer design pattern <code>strategy</code> </li>
+</ul><p></p>
+</li>
+<li><span class="main"> Fonctionnalités supplémentaires </span><p></p><ul>
+  <li> Afficher les cellules avec des couleurs différentes suivant le nombre de voisins.  <br><img src="Gol-gun.gif"> </li>
+</ul><p></p>
+</li>
+</ol>
+
+<h5>Indications</h5>
+
+<p>A titre purement indicatif, voici le nombre de méthodes publiques par classe,
+  dans la version orientée objet avec les spécifications du jeu d'origine (sans
+  fonctionnalité supplémentaire) :</p>
+<ul>
+  <li><code>LiveView</code> : 6</li>
+  <li><code>LiveCanvas</code> (grille) : 4</li>
+  <li><code>LiveCommandBar</code> : 1</li>
+  <li><code>LiveController</code> : une dizaine, dont 7 pour le GUI</li>
+  <li><code>LiveModel</code> : 6</li>
+  <li><code>LiveCell</code> : 1</li>
+</ul>
+
+<h5>Evaluation</h5>
+
+<p>L'évaluation de votre travail comprend d'une part la validation du bon
+    fonctionnement de votre application (suivant les consignes), et d'autre part,
+    votre manière de coder la POO.  Bien coder signifie :</p>
+
+<ul>
+  <li>  Points d'attention :
+    <ul>
+      <li>  attributs et méthodes privés dans la mesure du possible  </li>
+      <li>  utilisation de composition, de            dictionnaire ou de liste d'objets </li>
+      <li>  héritage  </li>
+      <li>  couplage minimal entre objets,            modularité </li>
+      <li>  design pattern
+    </li></ul>
+  </li>
+
+    <li>L'ordonnancement des attributs et méthodes dans une classe est la suivante :
+        <ol>
+            <li>attributs de classe</li>
+            <li>méthodes de classe (<code>@classmethod</code>)</li>
+            <li>méthodes de création d'objet (<code>singleton, factory, __new__</code>)</li>
+            <li>constructeur (<code>__init__</code> avec définition de tous les attributs d'instance)</li>
+            <li>destructeur éventuel (<code>__del__</code>)</li>
+            <li>autres méthodes magiques (<code>__str__, __next__, ...</code>)</li>
+            <li>accesseurs</li>
+            <li>méthodes publiques
+            </li><li>méthodes protégées
+            </li><li>méthodes privées</li>
+        </ol>
+    </li><li>Au sein des classes, ne jamais faire appel à une variable globale, notamment
+        celles définies dans le <code>main</code>.  Toujours passer les variables nécessaires par
+        argument de méthodes.</li>
+    <li>Tous les attributs sont <strong>privés</strong> ou <strong>protégés</strong>.
+      Certains peuvent avoir des
+    accesseurs (get et/ou set).  Dans ce cas, utilisez les décorateurs appropriés.
+    </li><li>Toutes les méthodes sont <strong>privées</strong> ou <strong>protégées</strong>,
+    sauf celles qui ont besoin d'être publiques. </li>
+    <li>Utiliser les <strong>méthodes magiques</strong> de Python (<code>__str__</code>, etc.)
+        chaque fois que c'est justifié.
+    </li><li>Utiliser les <strong>design pattern</strong> chaque fois que c'est justifié.
+    </li>
+    <li>Prévoir éventuellement un petit test unitaire  pour les classes développées.
+</li></ul>
+
+
+<h5>Références</h5>
+<ul>
+    <li><a href="https://fr.wikipedia.org/wiki/Jeu_de_la_vie" target="_blank">Wikipedia - Le Jeu de la vie</a></li>
+    <li><a href="https://fr.wikipedia.org/wiki/HighLife_(automate_cellulaire)" target="_blank">Wikipedia - HighLife</a></li>
+    <li><a href="https://fr.wikipedia.org/wiki/Day_%26_Night" target="_blank">Wikipedia - Day &amp; Night</a></li>
+</ul>
+
+<p>Bon travail !</p>
+
+
+<hr>
+
+
+
+
+
+
+</body></html>
