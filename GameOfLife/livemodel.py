@@ -197,6 +197,7 @@ class LiveCell:
         self.__state = state
         self.__neighbors_count = 0
         self.__age = 0  # Age: how many generations the cell has been alive
+        self.__fate = 'dead'  # Fate: 'surviving', 'dying', 'born', 'dead'
 
     def __str__(self):
         """String representation for debugging"""
@@ -231,6 +232,16 @@ class LiveCell:
     def age(self, value):
         """Set the cell age"""
         self.__age = value
+
+    @property
+    def fate(self):
+        """Get the cell fate ('surviving', 'dying', 'born', 'dead')"""
+        return self.__fate
+
+    @fate.setter
+    def fate(self, value):
+        """Set the cell fate"""
+        self.__fate = value
 
 
 class LiveModel(Observable):
@@ -493,6 +504,36 @@ class LiveModel(Observable):
         """
         strategy.apply(self)
         self.notify_observers()
+
+    def update_cell_fates(self):
+        """
+        Calculate and update the fate of each cell based on neighbors.
+
+        Fate values (following Wikipedia conventions):
+        - 'surviving': alive cell with 2-3 neighbors (stays alive) -> Blue
+        - 'dying': alive cell with <2 or >3 neighbors (will die) -> Red
+        - 'born': dead cell with exactly 3 neighbors (will be born) -> Green
+        - 'dead': dead cell that stays dead -> White
+        """
+        # First update neighbor counts
+        self.__update_neighbors_count()
+
+        # Then calculate fate for each cell
+        for row in range(self.__height):
+            for col in range(self.__width):
+                cell = self.__grid[row][col]
+                neighbors = cell.neighbors_count
+
+                if cell.state:  # Cell is currently alive
+                    if neighbors == 2 or neighbors == 3:
+                        cell.fate = 'surviving'  # Will stay alive (Blue)
+                    else:
+                        cell.fate = 'dying'  # Will die (Red)
+                else:  # Cell is currently dead
+                    if neighbors == 3:
+                        cell.fate = 'born'  # Will be born (Green)
+                    else:
+                        cell.fate = 'dead'  # Stays dead (White)
 
     def set_random_configuration(self, alive_percentage=0.25):
         """

@@ -217,13 +217,16 @@ class LiveController(Observer):
         This is the key method that separates view from model.
         Gets data from model and sends to view for display.
         """
+        # Calculate cell fates for Wikipedia color display
+        self.__model.update_cell_fates()
+
         # Get grid from model
         grid = self.__model.grid
 
         # Update statistics
         alive_count = self.__counter.count_alive_cells(grid)
 
-        # Display on canvas
+        # Display on canvas (uses cell.fate for colors)
         self.__view.canvas.display_grid(grid)
 
         # Update status with population

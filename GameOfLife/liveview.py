@@ -53,16 +53,14 @@ class LiveCanvas:
         )
         self.__canvas.pack(side=TOP, padx=5, pady=5)
 
-        # Color configuration
+        # Color configuration (Wikipedia conventions)
         self.__colors = {
-            'alive': 'black',
             'dead': 'white',
             'grid': 'gray',
-            # Colors based on cell age (generations alive)
-            'newborn': '#FF4444',      # Red - just born (age = 1)
-            'young': '#FFDD44',        # Yellow - young (age 2-3)
-            'stable': '#44DD44',       # Green - stable (age 4-7)
-            'old': '#4444FF'           # Blue - old/very stable (age >= 8)
+            # Colors based on cell fate (Wikipedia Game of Life conventions)
+            'surviving': '#4444FF',    # Blue - alive cell that stays alive (2-3 neighbors)
+            'born': '#44DD44',         # Green - dead cell that will be born (3 neighbors)
+            'dying': '#FF4444',        # Red - alive cell that will die (<2 or >3 neighbors)
         }
 
     @property
@@ -75,17 +73,24 @@ class LiveCanvas:
         """Get the cell size in pixels"""
         return self.__cell_size
 
-    def set_colors(self, alive_color=None, dead_color=None, grid_color=None):
+    def set_colors(self, surviving_color=None, born_color=None, dying_color=None,
+                   dead_color=None, grid_color=None):
         """
-        Set colors for cells and grid.
+        Set colors for cells and grid (Wikipedia conventions).
 
         Args:
-            alive_color (str): Color for alive cells
+            surviving_color (str): Blue - cells that stay alive
+            born_color (str): Green - cells that will be born
+            dying_color (str): Red - cells that will die
             dead_color (str): Color for dead cells
             grid_color (str): Color for grid lines
         """
-        if alive_color:
-            self.__colors['alive'] = alive_color
+        if surviving_color:
+            self.__colors['surviving'] = surviving_color
+        if born_color:
+            self.__colors['born'] = born_color
+        if dying_color:
+            self.__colors['dying'] = dying_color
         if dead_color:
             self.__colors['dead'] = dead_color
         if grid_color:
@@ -129,38 +134,28 @@ class LiveCanvas:
                 width=1
             )
 
-    def draw_cell(self, row, col, state, age=0):
+    def draw_cell(self, row, col, fate='dead'):
         """
         Draw a single cell.
 
-        FEATURE: Colors vary based on cell age (generations alive).
+        FEATURE: Colors based on cell fate (Wikipedia conventions).
 
         Args:
             row (int): Model row index
             col (int): Model column index
-            state (bool): True if alive, False if dead
-            age (int): Cell age in generations (for color variation)
+            fate (str): Cell fate - 'surviving', 'dying', 'born', or 'dead'
         """
         x1, y1, x2, y2 = self.__model_to_canvas(row, col)
 
-        # Determine color based on state and age
-        if state:
-            # Cell is alive - color varies by age
-            if age == 1:
-                # Newborn (just born)
-                fill_color = self.__colors['newborn']  # Red
-            elif age <= 3:
-                # Young (2-3 generations)
-                fill_color = self.__colors['young']  # Yellow
-            elif age <= 7:
-                # Stable (4-7 generations)
-                fill_color = self.__colors['stable']  # Green
-            else:
-                # Old/very stable (8+ generations)
-                fill_color = self.__colors['old']  # Blue
+        # Determine color based on fate (Wikipedia conventions)
+        if fate == 'surviving':
+            fill_color = self.__colors['surviving']  # Blue - stays alive
+        elif fate == 'dying':
+            fill_color = self.__colors['dying']  # Red - will die
+        elif fate == 'born':
+            fill_color = self.__colors['born']  # Green - will be born
         else:
-            # Cell is dead
-            fill_color = self.__colors['dead']  # White
+            fill_color = self.__colors['dead']  # White - stays dead
 
         self.__canvas.create_rectangle(
             x1, y1, x2, y2,
@@ -190,8 +185,9 @@ class LiveCanvas:
         self.clear()
 
         # Draw all cells FIRST using ITERATOR PATTERN
+        # Uses cell.fate for Wikipedia color conventions
         for row, col, cell in self.__grid_iterator(grid):
-            self.draw_cell(row, col, cell.state, cell.age)
+            self.draw_cell(row, col, cell.fate)
 
         # Draw grid lines AFTER cells (so they appear on top)
         self.draw_grid()
@@ -463,11 +459,11 @@ if __name__ == "__main__":
     view.create_status_bar()
     view.update_status(0, "Test mode")
 
-    # Draw test pattern
+    # Draw test pattern with Wikipedia colors
     canvas.draw_grid()
-    canvas.draw_cell(5, 5, True)
-    canvas.draw_cell(5, 6, True)
-    canvas.draw_cell(5, 7, True)
+    canvas.draw_cell(5, 5, 'surviving')  # Blue - stays alive
+    canvas.draw_cell(5, 6, 'born')       # Green - will be born
+    canvas.draw_cell(5, 7, 'dying')      # Red - will die
 
     print("View created. Close window to exit.")
     view.mainloop()
