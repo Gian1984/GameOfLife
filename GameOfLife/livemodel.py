@@ -580,29 +580,22 @@ class LiveModel(Observable):
 
     def update_cell_fates(self):
         """
-        Update cell transitions for display (NO predictions).
+        Update cell flags for initial display (before any evolution).
 
-        This is called for initial display before any evolution.
-        Transitions are calculated in evolve() based on actual state changes.
-
-        For initial display:
-        - 'surviving': alive cell -> Blue
-        - 'dead': dead cell -> White
-
-        After evolve():
-        - 'surviving': was alive, stays alive -> Blue
-        - 'born': was dead, becomes alive -> Green
-        - 'dying': was alive, becomes dead -> Red
-        - 'dead': was dead, stays dead -> White
+        For initial display, all alive cells are shown in BLUE (long_lived).
+        Colors will change after evolve() based on transitions.
         """
-        # For initial display, just show current state (no predictions)
         for row in range(self.__height):
             for col in range(self.__width):
                 cell = self.__grid[row][col]
+                # Reset all flags
+                cell.is_newly_born = False
+                cell.is_long_lived = False
+                cell.will_die_next_gen = False
+
                 if cell.state:
-                    cell.transition = 'surviving'  # Vivante = Bleu
-                else:
-                    cell.transition = 'dead'       # Morte = Blanc
+                    # Initial cells shown as BLUE (long_lived)
+                    cell.is_long_lived = True
 
     def set_random_configuration(self, alive_percentage=0.25):
         """
