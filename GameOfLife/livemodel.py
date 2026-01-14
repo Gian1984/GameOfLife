@@ -195,9 +195,10 @@ class LiveCell:
             state (bool): True if alive, False if dead
         """
         self.__state = state
+        self.__previous_state = False  # État précédent pour calculer la transition
         self.__neighbors_count = 0
         self.__age = 0  # Age: how many generations the cell has been alive
-        self.__fate = 'dead'  # Fate: 'surviving', 'dying', 'born', 'dead'
+        self.__transition = 'dead'  # Transition: 'surviving', 'dying', 'born', 'dead'
 
     def __str__(self):
         """String representation for debugging"""
@@ -234,14 +235,34 @@ class LiveCell:
         self.__age = value
 
     @property
+    def previous_state(self):
+        """Get the previous cell state"""
+        return self.__previous_state
+
+    @previous_state.setter
+    def previous_state(self, value):
+        """Set the previous cell state"""
+        self.__previous_state = value
+
+    @property
+    def transition(self):
+        """Get the cell transition ('surviving', 'dying', 'born', 'dead')"""
+        return self.__transition
+
+    @transition.setter
+    def transition(self, value):
+        """Set the cell transition"""
+        self.__transition = value
+
+    @property
     def fate(self):
-        """Get the cell fate ('surviving', 'dying', 'born', 'dead')"""
-        return self.__fate
+        """Alias for transition (backwards compatibility)"""
+        return self.__transition
 
     @fate.setter
     def fate(self, value):
-        """Set the cell fate"""
-        self.__fate = value
+        """Alias for transition (backwards compatibility)"""
+        self.__transition = value
 
 
 class LiveModel(Observable):
@@ -462,15 +483,29 @@ class LiveModel(Observable):
                 row_states.append(new_state)
             new_states.append(row_states)
 
-        # Apply new states to grid and update ages
+        # Apply new states to grid and update ages and transitions
         for row in range(self.__height):
             for col in range(self.__width):
                 cell = self.__grid[row][col]
                 old_state = cell.state
                 new_state = new_states[row][col]
 
+                # Save previous state for transition display
+                cell.previous_state = old_state
+
                 # Update state
                 cell.state = new_state
+
+                # Calculate transition (Wikipedia color conventions)
+                # Based on what JUST HAPPENED, not predictions
+                if old_state and new_state:
+                    cell.transition = 'surviving'  # Bleu: était vivante, reste vivante
+                elif not old_state and new_state:
+                    cell.transition = 'born'       # Vert: était morte, devient vivante
+                elif old_state and not new_state:
+                    cell.transition = 'dying'      # Rouge: était vivante, devient morte
+                else:
+                    cell.transition = 'dead'       # Blanc: était morte, reste morte
 
                 # Update age based on state transition
                 if new_state:  # Cell is alive
@@ -507,33 +542,29 @@ class LiveModel(Observable):
 
     def update_cell_fates(self):
         """
-        Calculate and update the fate of each cell based on neighbors.
+        Update cell transitions for display (NO predictions).
 
-        Fate values (following Wikipedia conventions):
-        - 'surviving': alive cell with 2-3 neighbors (stays alive) -> Blue
-        - 'dying': alive cell with <2 or >3 neighbors (will die) -> Red
-        - 'born': dead cell with exactly 3 neighbors (will be born) -> Green
-        - 'dead': dead cell that stays dead -> White
+        This is called for initial display before any evolution.
+        Transitions are calculated in evolve() based on actual state changes.
+
+        For initial display:
+        - 'surviving': alive cell -> Blue
+        - 'dead': dead cell -> White
+
+        After evolve():
+        - 'surviving': was alive, stays alive -> Blue
+        - 'born': was dead, becomes alive -> Green
+        - 'dying': was alive, becomes dead -> Red
+        - 'dead': was dead, stays dead -> White
         """
-        # First update neighbor counts
-        self.__update_neighbors_count()
-
-        # Then calculate fate for each cell
+        # For initial display, just show current state (no predictions)
         for row in range(self.__height):
             for col in range(self.__width):
                 cell = self.__grid[row][col]
-                neighbors = cell.neighbors_count
-
-                if cell.state:  # Cell is currently alive
-                    if neighbors == 2 or neighbors == 3:
-                        cell.fate = 'surviving'  # Will stay alive (Blue)
-                    else:
-                        cell.fate = 'dying'  # Will die (Red)
-                else:  # Cell is currently dead
-                    if neighbors == 3:
-                        cell.fate = 'born'  # Will be born (Green)
-                    else:
-                        cell.fate = 'dead'  # Stays dead (White)
+                if cell.state:
+                    cell.transition = 'surviving'  # Vivante = Bleu
+                else:
+                    cell.transition = 'dead'       # Morte = Blanc
 
     def set_random_configuration(self, alive_percentage=0.25):
         """

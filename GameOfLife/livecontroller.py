@@ -45,6 +45,7 @@ class LiveController(Observer):
         # Animation state
         self.__is_running = False
         self.__animation_speed = 100  # milliseconds between generations
+        self.__just_evolved = False  # Flag pour ne pas écraser les transitions après evolve()
 
         # Setup the view components
         self.__setup_view()
@@ -103,8 +104,9 @@ class LiveController(Observer):
         Handle Step button click.
         Advance one generation.
         """
+        self.__just_evolved = True  # AVANT evolve() car notify_observers() est appelé dedans
         self.__model.evolve()
-        self.__update_display()
+        self.__just_evolved = False
 
     def on_clear(self):
         """
@@ -217,8 +219,10 @@ class LiveController(Observer):
         This is the key method that separates view from model.
         Gets data from model and sends to view for display.
         """
-        # Calculate cell fates for Wikipedia color display
-        self.__model.update_cell_fates()
+        # Only update fates for initial display (not after evolve)
+        # After evolve(), transitions are already calculated (born/dying/surviving)
+        if not self.__just_evolved:
+            self.__model.update_cell_fates()
 
         # Get grid from model
         grid = self.__model.grid
@@ -226,7 +230,7 @@ class LiveController(Observer):
         # Update statistics
         alive_count = self.__counter.count_alive_cells(grid)
 
-        # Display on canvas (uses cell.fate for colors)
+        # Display on canvas (uses cell.transition for colors)
         self.__view.canvas.display_grid(grid)
 
         # Update status with population
@@ -245,10 +249,9 @@ class LiveController(Observer):
         """
         if self.__is_running:
             # Evolve one generation
+            self.__just_evolved = True  # AVANT evolve() car notify_observers() est appelé dedans
             self.__model.evolve()
-
-            # Update display
-            self.__update_display()
+            self.__just_evolved = False
 
             # Schedule next animation frame
             self.__view.root.after(self.__animation_speed, self.__animate)

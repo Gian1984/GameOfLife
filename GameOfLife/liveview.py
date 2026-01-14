@@ -57,10 +57,10 @@ class LiveCanvas:
         self.__colors = {
             'dead': 'white',
             'grid': 'gray',
-            # Colors based on cell fate (Wikipedia Game of Life conventions)
-            'surviving': '#4444FF',    # Blue - alive cell that stays alive (2-3 neighbors)
-            'born': '#44DD44',         # Green - dead cell that will be born (3 neighbors)
-            'dying': '#FF4444',        # Red - alive cell that will die (<2 or >3 neighbors)
+            # Colors based on cell transition (Wikipedia Game of Life conventions)
+            'surviving': '#4444FF',    # Bleu - cellule en cours de vie (était vivante, reste vivante)
+            'born': '#44DD44',         # Vert - cellule naissante (était morte, devient vivante)
+            'dying': '#FF4444',        # Rouge - cellule mourante (était vivante, devient morte)
         }
 
     @property
