@@ -503,7 +503,11 @@ class LiveModel(Observable):
                 elif not old_state and new_state:
                     cell.transition = 'born'       # Vert: était morte, devient vivante
                 elif old_state and not new_state:
-                    cell.transition = 'dying'      # Rouge: était vivante, devient morte
+                    # Cellule qui meurt - vérifier si éphémère (n'a vécu qu'une génération)
+                    if cell.age == 1:
+                        cell.transition = 'ephemeral'  # Jaune: n'a vécu qu'une génération
+                    else:
+                        cell.transition = 'dying'      # Rouge: était vivante, devient morte
                 else:
                     cell.transition = 'dead'       # Blanc: était morte, reste morte
 

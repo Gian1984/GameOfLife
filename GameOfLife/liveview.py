@@ -61,6 +61,7 @@ class LiveCanvas:
             'surviving': '#4444FF',    # Bleu - cellule en cours de vie (était vivante, reste vivante)
             'born': '#44DD44',         # Vert - cellule naissante (était morte, devient vivante)
             'dying': '#FF4444',        # Rouge - cellule mourante (était vivante, devient morte)
+            'ephemeral': '#FFDD44',    # Jaune - cellule éphémère (n'a vécu qu'une génération)
         }
 
     @property
@@ -143,19 +144,21 @@ class LiveCanvas:
         Args:
             row (int): Model row index
             col (int): Model column index
-            fate (str): Cell fate - 'surviving', 'dying', 'born', or 'dead'
+            fate (str): Cell fate - 'surviving', 'dying', 'born', 'ephemeral', or 'dead'
         """
         x1, y1, x2, y2 = self.__model_to_canvas(row, col)
 
         # Determine color based on fate (Wikipedia conventions)
         if fate == 'surviving':
-            fill_color = self.__colors['surviving']  # Blue - stays alive
+            fill_color = self.__colors['surviving']  # Bleu - reste vivante
         elif fate == 'dying':
-            fill_color = self.__colors['dying']  # Red - will die
+            fill_color = self.__colors['dying']  # Rouge - meurt
         elif fate == 'born':
-            fill_color = self.__colors['born']  # Green - will be born
+            fill_color = self.__colors['born']  # Vert - naît
+        elif fate == 'ephemeral':
+            fill_color = self.__colors['ephemeral']  # Jaune - n'a vécu qu'une génération
         else:
-            fill_color = self.__colors['dead']  # White - stays dead
+            fill_color = self.__colors['dead']  # Blanc - reste morte
 
         self.__canvas.create_rectangle(
             x1, y1, x2, y2,
