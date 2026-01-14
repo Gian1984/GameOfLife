@@ -582,20 +582,16 @@ class LiveModel(Observable):
         """
         Update cell flags for initial display (before any evolution).
 
-        For initial display, all alive cells are shown in BLUE (long_lived).
+        For initial display, all alive cells are shown in GRAY (no flags set).
         Colors will change after evolve() based on transitions.
         """
         for row in range(self.__height):
             for col in range(self.__width):
                 cell = self.__grid[row][col]
-                # Reset all flags
+                # Reset all flags - cells will be GRAY (initial state)
                 cell.is_newly_born = False
                 cell.is_long_lived = False
                 cell.will_die_next_gen = False
-
-                if cell.state:
-                    # Initial cells shown as BLUE (long_lived)
-                    cell.is_long_lived = True
 
     def set_random_configuration(self, alive_percentage=0.25):
         """

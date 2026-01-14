@@ -53,15 +53,15 @@ class LiveCanvas:
         )
         self.__canvas.pack(side=TOP, padx=5, pady=5)
 
-        # Color configuration
+        # Color configuration (Wikipedia Game of Life conventions)
         self.__colors = {
             'color_dead': 'white',
             'color_grid': 'gray',
-            'color_newly_born': '#44DD44',         # Green - cellule naissante
-            'color_long_lived': '#4444FF',         # Blue - cellule vivant depuis au moins 2 générations
-            'color_will_die': '#FF4444',           # Red - cellule vivante qui va mourir à la prochaine génération
-            'color_born_and_die': '#FFDD44',       # Yellow - cellule naissante ET qui va mourir à la prochaine génération
-            'color_alive_default': '#888888',      # Dark Gray - default for alive cells not meeting other criteria
+            'color_initial': '#888888',            # Gray - initial state (before any evolution)
+            'color_newly_born': '#44DD44',         # Green - newly born cell (age = 1, will survive)
+            'color_long_lived': '#4444FF',         # Blue - stable cell (alive for >= 2 generations)
+            'color_will_die': '#FF4444',           # Red - cell that will die next generation (after living >= 2 gens)
+            'color_born_and_die': '#FFDD44',       # Yellow - ephemeral cell (born AND will die next generation)
         }
 
     @property
@@ -153,12 +153,12 @@ class LiveCanvas:
                 fill_color = self.__colors['color_born_and_die'] # Yellow
             elif cell_obj.is_newly_born:
                 fill_color = self.__colors['color_newly_born'] # Green
-            elif cell_obj.will_die_next_gen: # Prioritize red over blue if it will die
+            elif cell_obj.will_die_next_gen:
                 fill_color = self.__colors['color_will_die'] # Red
             elif cell_obj.is_long_lived:
                 fill_color = self.__colors['color_long_lived'] # Blue
             else:
-                fill_color = self.__colors['color_alive_default'] # Default alive color
+                fill_color = self.__colors['color_initial'] # Gray - initial state
 
         self.__canvas.create_rectangle(
             x1, y1, x2, y2,
