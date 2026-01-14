@@ -199,6 +199,9 @@ class LiveCell:
         self.__neighbors_count = 0
         self.__age = 0  # Age: how many generations the cell has been alive
         self.__transition = 'dead'  # Transition: 'surviving', 'dying', 'born', 'dead'
+        self.__is_newly_born = False
+        self.__is_long_lived = False
+        self.__will_die_next_gen = False
 
     def __str__(self):
         """String representation for debugging"""
@@ -263,6 +266,36 @@ class LiveCell:
     def fate(self, value):
         """Alias for transition (backwards compatibility)"""
         self.__transition = value
+
+    @property
+    def is_newly_born(self):
+        """Get if the cell was newly born in this generation"""
+        return self.__is_newly_born
+
+    @is_newly_born.setter
+    def is_newly_born(self, value):
+        """Set if the cell was newly born in this generation"""
+        self.__is_newly_born = value
+
+    @property
+    def is_long_lived(self):
+        """Get if the cell has been alive for at least 2 generations"""
+        return self.__is_long_lived
+
+    @is_long_lived.setter
+    def is_long_lived(self, value):
+        """Set if the cell has been alive for at least 2 generations"""
+        self.__is_long_lived = value
+
+    @property
+    def will_die_next_gen(self):
+        """Get if the cell is currently alive but will die in the next generation"""
+        return self.__will_die_next_gen
+
+    @will_die_next_gen.setter
+    def will_die_next_gen(self, value):
+        """Set if the cell is currently alive but will die in the next generation"""
+        self.__will_die_next_gen = value
 
 
 class LiveModel(Observable):
@@ -454,11 +487,10 @@ class LiveModel(Observable):
         - Cell survives (alive -> alive): age += 1
         - Cell dies (alive -> dead): age = 0
         """
-        # First, count neighbors for all cells
+        # First, count neighbors for all cells based on CURRENT grid state (before this evolution)
         self.__update_neighbors_count()
 
-        # Create new states based on rules
-        # Important: Store new states separately to avoid affecting counts
+        # Create new states based on rules, using current cell state and neighbor counts
         new_states = []
         for row in range(self.__height):
             row_states = []
@@ -467,58 +499,60 @@ class LiveModel(Observable):
                 neighbors = cell.neighbors_count
                 current_state = cell.state
 
-                # Apply Game of Life rules
+                # Apply Game of Life rules to determine next state
                 if neighbors == 3:
-                    # Birth: dead cell with 3 neighbors becomes alive
-                    # Survival: alive cell with 3 neighbors stays alive
                     new_state = True
                 elif neighbors == 2:
-                    # Survival: alive cell with 2 neighbors stays alive
-                    # Death: dead cell with 2 neighbors stays dead
                     new_state = current_state
                 else:
-                    # Death: any other case results in death
                     new_state = False
-
                 row_states.append(new_state)
             new_states.append(row_states)
 
-        # Apply new states to grid and update ages and transitions
+        # Apply new states to grid and update ages, and initial color-related flags
         for row in range(self.__height):
             for col in range(self.__width):
                 cell = self.__grid[row][col]
-                old_state = cell.state
-                new_state = new_states[row][col]
+                old_state = cell.state # State before this evolution
+                new_state = new_states[row][col] # State after this evolution
 
-                # Save previous state for transition display
-                cell.previous_state = old_state
+                # Reset all color-related flags for the new generation
+                cell.is_newly_born = False
+                cell.is_long_lived = False
+                cell.will_die_next_gen = False # Reset before recalculating for the current display cycle
 
-                # Update state
+                cell.previous_state = old_state # Keep for potential other uses
                 cell.state = new_state
 
-                # Calculate transition (Wikipedia color conventions)
-                # Based on what JUST HAPPENED, not predictions
-                if old_state and new_state:
-                    cell.transition = 'surviving'  # Bleu: était vivante, reste vivante
-                elif not old_state and new_state:
-                    cell.transition = 'born'       # Vert: était morte, devient vivante
-                elif old_state and not new_state:
-                    # Cellule qui meurt - vérifier si éphémère (n'a vécu qu'une génération)
-                    if cell.age == 1:
-                        cell.transition = 'ephemeral'  # Jaune: n'a vécu qu'une génération
-                    else:
-                        cell.transition = 'dying'      # Rouge: était vivante, devient morte
-                else:
-                    cell.transition = 'dead'       # Blanc: était morte, reste morte
+                # Update age and set is_newly_born
+                if new_state:
+                    if old_state:
+                        cell.age += 1
+                    else: # Cell was dead, now alive -> born
+                        cell.age = 1
+                        cell.is_newly_born = True
+                else: # Cell is dead
+                    cell.age = 0
 
-                # Update age based on state transition
-                if new_state:  # Cell is alive
-                    if old_state:  # Was already alive -> survives
-                        cell.age += 1  # Increment age
-                    else:  # Was dead -> just born
-                        cell.age = 1  # Newborn
-                else:  # Cell is dead
-                    cell.age = 0  # Reset age
+                # Set is_long_lived if cell is alive and age is 2 or more
+                if cell.state and cell.age >= 2:
+                    cell.is_long_lived = True
+
+        # Now that the grid has evolved to the new generation, re-count neighbors for this *newly evolved* grid.
+        # This is essential for correctly calculating `will_die_next_gen` for the *current* generation being displayed,
+        # predicting its state for the *next* generation.
+        self.__update_neighbors_count()
+
+        # Calculate will_die_next_gen (Red/Yellow) based on the *newly evolved* grid and its neighbors
+        for row in range(self.__height):
+            for col in range(self.__width):
+                cell = self.__grid[row][col]
+                if cell.state: # Only live cells in the *new* state can be predicted to die
+                    current_neighbors_in_new_grid = cell.neighbors_count # Neighbors in the new grid
+                    # A live cell dies if it has fewer than two live neighbours (underpopulation)
+                    # or more than three live neighbours (overpopulation).
+                    if not (current_neighbors_in_new_grid == 2 or current_neighbors_in_new_grid == 3):
+                        cell.will_die_next_gen = True
 
         # Increment generation counter
         self.__generation += 1

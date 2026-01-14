@@ -53,15 +53,15 @@ class LiveCanvas:
         )
         self.__canvas.pack(side=TOP, padx=5, pady=5)
 
-        # Color configuration (Wikipedia conventions)
+        # Color configuration
         self.__colors = {
-            'dead': 'white',
-            'grid': 'gray',
-            # Colors based on cell transition (Wikipedia Game of Life conventions)
-            'surviving': '#4444FF',    # Bleu - cellule en cours de vie (était vivante, reste vivante)
-            'born': '#44DD44',         # Vert - cellule naissante (était morte, devient vivante)
-            'dying': '#FF4444',        # Rouge - cellule mourante (était vivante, devient morte)
-            'ephemeral': '#FFDD44',    # Jaune - cellule éphémère (n'a vécu qu'une génération)
+            'color_dead': 'white',
+            'color_grid': 'gray',
+            'color_newly_born': '#44DD44',         # Green - cellule naissante
+            'color_long_lived': '#4444FF',         # Blue - cellule vivant depuis au moins 2 générations
+            'color_will_die': '#FF4444',           # Red - cellule vivante qui va mourir à la prochaine génération
+            'color_born_and_die': '#FFDD44',       # Yellow - cellule naissante ET qui va mourir à la prochaine génération
+            'color_alive_default': '#888888',      # Dark Gray - default for alive cells not meeting other criteria
         }
 
     @property
@@ -122,7 +122,7 @@ class LiveCanvas:
             x = col * self.__cell_size
             self.__canvas.create_line(
                 x, 0, x, canvas_height,
-                fill=self.__colors['grid'],
+                fill=self.__colors['color_grid'],
                 width=1
             )
 
@@ -131,34 +131,34 @@ class LiveCanvas:
             y = row * self.__cell_size
             self.__canvas.create_line(
                 0, y, canvas_width, y,
-                fill=self.__colors['grid'],
+                fill=self.__colors['color_grid'],
                 width=1
             )
 
-    def draw_cell(self, row, col, fate='dead'):
+    def draw_cell(self, row, col, cell_obj):
         """
-        Draw a single cell.
-
-        FEATURE: Colors based on cell fate (Wikipedia conventions).
+        Draw a single cell with colors based on its properties.
 
         Args:
             row (int): Model row index
             col (int): Model column index
-            fate (str): Cell fate - 'surviving', 'dying', 'born', 'ephemeral', or 'dead'
+            cell_obj (LiveCell): The cell object from the model
         """
         x1, y1, x2, y2 = self.__model_to_canvas(row, col)
 
-        # Determine color based on fate (Wikipedia conventions)
-        if fate == 'surviving':
-            fill_color = self.__colors['surviving']  # Bleu - reste vivante
-        elif fate == 'dying':
-            fill_color = self.__colors['dying']  # Rouge - meurt
-        elif fate == 'born':
-            fill_color = self.__colors['born']  # Vert - naît
-        elif fate == 'ephemeral':
-            fill_color = self.__colors['ephemeral']  # Jaune - n'a vécu qu'une génération
-        else:
-            fill_color = self.__colors['dead']  # Blanc - reste morte
+        fill_color = self.__colors['color_dead'] # Default to dead color
+
+        if cell_obj.state: # Only consider special colors if the cell is alive
+            if cell_obj.is_newly_born and cell_obj.will_die_next_gen:
+                fill_color = self.__colors['color_born_and_die'] # Yellow
+            elif cell_obj.is_newly_born:
+                fill_color = self.__colors['color_newly_born'] # Green
+            elif cell_obj.will_die_next_gen: # Prioritize red over blue if it will die
+                fill_color = self.__colors['color_will_die'] # Red
+            elif cell_obj.is_long_lived:
+                fill_color = self.__colors['color_long_lived'] # Blue
+            else:
+                fill_color = self.__colors['color_alive_default'] # Default alive color
 
         self.__canvas.create_rectangle(
             x1, y1, x2, y2,
@@ -190,7 +190,7 @@ class LiveCanvas:
         # Draw all cells FIRST using ITERATOR PATTERN
         # Uses cell.fate for Wikipedia color conventions
         for row, col, cell in self.__grid_iterator(grid):
-            self.draw_cell(row, col, cell.fate)
+            self.draw_cell(row, col, cell)
 
         # Draw grid lines AFTER cells (so they appear on top)
         self.draw_grid()
