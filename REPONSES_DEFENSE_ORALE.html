@@ -1,0 +1,1102 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Defense Orale - Reponses aux Questions</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Times New Roman', serif;
+            line-height: 1.5;
+            max-width: 210mm;
+            margin: 0 auto;
+            padding: 12mm;
+            color: #000;
+            background: white;
+            font-size: 11pt;
+        }
+        h1 {
+            color: #0066cc;
+            text-align: center;
+            border-bottom: 3px solid #0066cc;
+            padding-bottom: 10px;
+            font-size: 18pt;
+            margin-top: 0;
+        }
+        h2 {
+            color: white;
+            background: #0066cc;
+            padding: 8px 12px;
+            margin-top: 20px;
+            font-size: 12pt;
+            page-break-after: avoid;
+        }
+        h3 {
+            color: #0066cc;
+            margin-top: 12px;
+            font-size: 11pt;
+            border-bottom: 1px solid #0066cc;
+            padding-bottom: 3px;
+        }
+        .question {
+            background: #e7f3ff;
+            border-left: 4px solid #0066cc;
+            padding: 10px;
+            margin: 8px 0;
+            font-weight: bold;
+            page-break-after: avoid;
+        }
+        .reponse {
+            margin-left: 15px;
+            padding: 8px 0;
+        }
+        .code-block {
+            background: #f5f5f5;
+            border: 1px solid #ddd;
+            border-left: 4px solid #28a745;
+            padding: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 9pt;
+            overflow-x: auto;
+            white-space: pre;
+            margin: 8px 0;
+            page-break-inside: avoid;
+        }
+        .localisation {
+            background: #fff3cd;
+            border-left: 4px solid #ff9800;
+            padding: 8px;
+            margin: 8px 0;
+            font-size: 10pt;
+        }
+        .important {
+            background: #d4edda;
+            border-left: 4px solid #28a745;
+            padding: 8px;
+            margin: 8px 0;
+        }
+        .warning {
+            background: #f8d7da;
+            border-left: 4px solid #dc3545;
+            padding: 8px;
+            margin: 8px 0;
+        }
+        code {
+            background: #f4f4f4;
+            padding: 1px 4px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+            font-size: 9pt;
+        }
+        ul, ol {
+            margin: 5px 0;
+            padding-left: 25px;
+        }
+        li {
+            margin: 3px 0;
+        }
+        .header-info {
+            text-align: center;
+            margin-bottom: 15px;
+            font-size: 10pt;
+            color: #666;
+        }
+        .toc {
+            background: #f9f9f9;
+            border: 1px solid #ddd;
+            padding: 12px;
+            margin: 15px 0;
+            columns: 2;
+            column-gap: 20px;
+        }
+        .toc-title {
+            font-weight: bold;
+            color: #0066cc;
+            margin-bottom: 8px;
+            column-span: all;
+        }
+        .toc a {
+            color: #333;
+            text-decoration: none;
+            font-size: 9pt;
+            display: block;
+            padding: 2px 0;
+        }
+        .toc a:hover {
+            color: #0066cc;
+        }
+        @media print {
+            body { padding: 8mm; }
+            h2 { page-break-after: avoid; }
+            .question { page-break-after: avoid; }
+            .code-block { page-break-inside: avoid; }
+        }
+        .schema {
+            font-family: 'Courier New', monospace;
+            font-size: 9pt;
+            background: #f9f9f9;
+            padding: 10px;
+            border: 1px solid #ddd;
+            white-space: pre;
+            margin: 8px 0;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Defense Orale - Reponses aux Questions<br>Projet Q54 - Game of Life</h1>
+
+<div class="header-info">
+    Auteurs : Gianluca Tiengo et Safwan Hannoudi | Janvier 2026
+</div>
+
+<!-- TABLE DES MATIERES -->
+<div class="toc">
+    <div class="toc-title">TABLE DES MATIERES</div>
+    <a href="#q1">1. Accesseurs implantes</a>
+    <a href="#q2">2. Organisation des classes</a>
+    <a href="#q3">3. Application de l'heritage</a>
+    <a href="#q4">4. Heritage multiple</a>
+    <a href="#q5">5. Polymorphisme</a>
+    <a href="#q6">6. Architecture MVC</a>
+    <a href="#q7">7. Methode classe vs instance</a>
+    <a href="#q8">8. Composition</a>
+    <a href="#q9">9. Classe abstraite</a>
+    <a href="#q10">10. Modelisation cellule</a>
+    <a href="#q11">11. Pattern Observer</a>
+    <a href="#q12">12. Pattern Strategy</a>
+    <a href="#q13">13. Pattern Factory</a>
+    <a href="#q14">14. Pattern Singleton</a>
+    <a href="#q15">15. Pattern Iterator</a>
+    <a href="#q16">16. Refactorisation</a>
+    <a href="#q17">17. Points faibles</a>
+    <a href="#q18">18. Nouvelle famille cellules</a>
+    <a href="#q19">19. Systeme de log</a>
+    <a href="#q20">20. Deux GUI</a>
+    <a href="#q21">21. Consignes non implantees</a>
+    <a href="#q22">22. Gestion erreurs</a>
+    <a href="#q23">23. Types d'exceptions</a>
+    <a href="#q24">24. Model MVC</a>
+    <a href="#q25">25. Controller MVC</a>
+    <a href="#q26">26. View MVC</a>
+    <a href="#q27">27. Code a optimiser</a>
+</div>
+
+<!-- QUESTION 1 -->
+<h2 id="q1">Question 1 : Quels accesseurs avez-vous implante ?</h2>
+
+<div class="reponse">
+    <p>Nous avons implante des accesseurs (<code>@property</code> et <code>@setter</code>) pour tous les attributs prives necessitant un acces externe controle.</p>
+
+    <div class="localisation">
+        <strong>Localisations :</strong><br>
+        - <code>LiveCell</code> : livemodel.py:210-298<br>
+        - <code>LiveModel</code> : livemodel.py:363-381<br>
+        - <code>LiveCanvas</code> : liveview.py:67-75<br>
+        - <code>LiveCounter</code> : livecounter.py:34-57
+    </div>
+
+    <h3>Accesseurs de LiveCell</h3>
+    <ul>
+        <li><code>state</code> (getter/setter) : Etat vivant/mort</li>
+        <li><code>age</code> (getter/setter) : Age en generations</li>
+        <li><code>neighbors_count</code> (getter/setter) : Nombre de voisins</li>
+        <li><code>is_newly_born</code>, <code>is_long_lived</code>, <code>will_die_next_gen</code> : Flags pour les couleurs</li>
+    </ul>
+
+    <h3>Accesseurs de LiveModel</h3>
+    <ul>
+        <li><code>width</code>, <code>height</code> (getter seulement) : Dimensions immuables</li>
+        <li><code>generation</code> (getter seulement) : Compteur gere internement</li>
+        <li><code>grid</code> (getter seulement) : Acces lecture seule</li>
+    </ul>
+
+<div class="code-block"># livemodel.py - Exemple d'accesseur (lignes 210-218)
+@property
+def state(self):
+    """Getter - lecture de l'attribut prive"""
+    return self.__state
+
+@state.setter
+def state(self, value):
+    """Setter - modification controlee"""
+    self.__state = value</div>
+
+    <div class="important">
+        <strong>Pourquoi ces accesseurs :</strong>
+        <ul>
+            <li>Encapsulation : Les attributs restent prives (__attribut)</li>
+            <li>Controle : Possibilite d'ajouter validation dans les setters</li>
+            <li>Lecture seule : width/height n'ont pas de setter (immuables)</li>
+        </ul>
+    </div>
+</div>
+
+<!-- QUESTION 2 -->
+<h2 id="q2">Question 2 : Organisation des classes et communication</h2>
+
+<div class="reponse">
+    <h3>Architecture en couches MVC</h3>
+
+<div class="schema">
++-------------------+
+|   LiveController  |  <-- Point central de communication
++-------------------+
+    |         |
+    v         v
++--------+ +--------+
+|LiveModel| |LiveView|
++--------+ +--------+
+    |         |
+    v         v
++--------+ +-------------+ +--------------+
+|LiveCell| |LiveCanvas   | |LiveCommandBar|
++--------+ +-------------+ +--------------+</div>
+
+    <h3>Couches du projet</h3>
+    <ul>
+        <li><strong>MODEL</strong> (livemodel.py) : LiveModel, LiveCell, Observer, Observable, Strategies</li>
+        <li><strong>VIEW</strong> (liveview.py) : LiveView, LiveCanvas, LiveCommandBar</li>
+        <li><strong>CONTROLLER</strong> (livecontroller.py) : LiveController</li>
+        <li><strong>STATISTIQUES</strong> (livecounter.py) : LiveCounter</li>
+    </ul>
+
+    <h3>Flux de communication</h3>
+    <ol>
+        <li>Controller → Model : toggle_cell(), evolve(), clear_grid()</li>
+        <li>Model → Controller : notify_observers() via Observer Pattern</li>
+        <li>Controller → View : display_grid(), update_status()</li>
+        <li>View → Controller : Callbacks des boutons et clics canvas</li>
+    </ol>
+</div>
+
+<!-- QUESTION 3 -->
+<h2 id="q3">Question 3 : Ou avez-vous applique l'heritage ?</h2>
+
+<div class="reponse">
+    <div class="localisation">
+        <strong>Observer Pattern :</strong><br>
+        - <code>LiveModel(Observable)</code> : livemodel.py:301<br>
+        - <code>LiveController(Observer)</code> : livecontroller.py:17<br><br>
+        <strong>Strategy Pattern :</strong><br>
+        - <code>EmptyStrategy(ConfigurationStrategy)</code> : livemodel.py:101<br>
+        - <code>RandomStrategy(ConfigurationStrategy)</code> : livemodel.py:115<br>
+        - <code>CannonStrategy(ConfigurationStrategy)</code> : livemodel.py:140
+    </div>
+
+<div class="code-block"># Observer Pattern - Heritage
+class Observer(ABC):
+    @abstractmethod
+    def update(self, subject): pass
+
+class LiveController(Observer):  # Herite de Observer
+    def update(self, subject):
+        self.__update_display()
+
+# Strategy Pattern - Heritage
+class ConfigurationStrategy(ABC):
+    @abstractmethod
+    def apply(self, model): pass
+
+class RandomStrategy(ConfigurationStrategy):  # Herite de Strategy
+    def apply(self, model):
+        # Implementation specifique</div>
+</div>
+
+<!-- QUESTION 4 -->
+<h2 id="q4">Question 4 : Avez-vous applique l'heritage multiple ?</h2>
+
+<div class="reponse">
+    <p><strong>NON</strong>, nous n'avons pas applique l'heritage multiple.</p>
+
+    <h3>Raisons</h3>
+    <ul>
+        <li>Pas necessaire : Chaque classe a une seule responsabilite</li>
+        <li>Eviter la complexite : Diamond problem possible</li>
+        <li>Composition preferee : LiveView contient Canvas et CommandBar</li>
+    </ul>
+
+    <h3>Ou l'utiliser (theoriquement)</h3>
+<div class="code-block"># Exemple theorique avec Mixins
+class LoggableMixin:
+    def log(self, message):
+        print(f"[LOG] {message}")
+
+class LiveModel(Observable, LoggableMixin):
+    # Herite des deux comportements
+    pass</div>
+</div>
+
+<!-- QUESTION 5 -->
+<h2 id="q5">Question 5 : Qu'est-ce que le polymorphisme ?</h2>
+
+<div class="reponse">
+    <div class="important">
+        <strong>Definition :</strong> Le polymorphisme permet a des objets de types differents de repondre au meme message (appel de methode) de maniere differente.
+    </div>
+
+    <h3>Application dans notre projet</h3>
+
+    <h4>1. Strategy Pattern (livemodel.py:563-579)</h4>
+<div class="code-block">def apply_configuration_strategy(self, strategy):
+    strategy.apply(self)  # Polymorphisme !
+
+# Meme interface, comportements differents :
+model.apply_configuration_strategy(RandomStrategy(0.25))  # Aleatoire
+model.apply_configuration_strategy(CannonStrategy())      # Canon
+model.apply_configuration_strategy(EmptyStrategy())       # Vide</div>
+
+    <h4>2. Observer Pattern (livemodel.py:407-414)</h4>
+<div class="code-block">def notify_observers(self):
+    for observer in self.__observers:
+        observer.update(self)  # Polymorphisme !</div>
+
+    <h4>3. Methode __str__ (polymorphisme ad-hoc)</h4>
+<div class="code-block">print(cell)   # Affiche "1" ou "0" (LiveCell.__str__)
+print(model)  # Affiche la grille complete (LiveModel.__str__)</div>
+</div>
+
+<!-- QUESTION 6 -->
+<h2 id="q6">Question 6 : Architecture MVC</h2>
+
+<div class="reponse">
+    <p><strong>OUI</strong>, l'application suit strictement l'architecture MVC.</p>
+
+    <div class="localisation">
+        <strong>Structure des fichiers :</strong><br>
+        - <code>livemodel.py</code> : MODEL (logique metier)<br>
+        - <code>liveview.py</code> : VIEW (interface graphique)<br>
+        - <code>livecontroller.py</code> : CONTROLLER (coordination)<br>
+        - <code>main.py</code> : Point d'entree
+    </div>
+
+    <h3>MODEL (livemodel.py)</h3>
+    <ul>
+        <li>Gere la grille de cellules (LiveCell)</li>
+        <li>Contient la logique du jeu (evolve, count_neighbors)</li>
+        <li>Utilise des indices standards (0, 1, 2...)</li>
+        <li>Ne connait PAS la View</li>
+    </ul>
+
+    <h3>VIEW (liveview.py)</h3>
+    <ul>
+        <li>Gere l'affichage Tkinter</li>
+        <li>Utilise des pixels (0, 10, 20...)</li>
+        <li>Ne connait PAS la logique du jeu</li>
+    </ul>
+
+    <h3>CONTROLLER (livecontroller.py)</h3>
+    <ul>
+        <li>Possede references au Model ET View</li>
+        <li>Gere les evenements utilisateur</li>
+        <li>Traduit actions → Model → View</li>
+    </ul>
+
+<div class="code-block"># main.py - Instanciation MVC (lignes 34-44)
+model = LiveModel(width=40, height=40)
+view = LiveView(title="Game of Life")
+controller = LiveController(model, view)
+controller.run()</div>
+</div>
+
+<!-- QUESTION 7 -->
+<h2 id="q7">Question 7 : Methode de classe vs methode d'instance</h2>
+
+<div class="reponse">
+    <table style="width:100%; border-collapse: collapse; margin: 10px 0;">
+        <tr style="background: #0066cc; color: white;">
+            <th style="padding: 8px; border: 1px solid #ddd;">Methode d'instance</th>
+            <th style="padding: 8px; border: 1px solid #ddd;">Methode de classe</th>
+        </tr>
+        <tr>
+            <td style="padding: 8px; border: 1px solid #ddd;">Premier param: <code>self</code></td>
+            <td style="padding: 8px; border: 1px solid #ddd;">Premier param: <code>cls</code></td>
+        </tr>
+        <tr>
+            <td style="padding: 8px; border: 1px solid #ddd;">Accede aux attributs d'instance</td>
+            <td style="padding: 8px; border: 1px solid #ddd;">Accede aux attributs de classe</td>
+        </tr>
+        <tr>
+            <td style="padding: 8px; border: 1px solid #ddd;">Appelee sur objet: <code>obj.method()</code></td>
+            <td style="padding: 8px; border: 1px solid #ddd;">Appelee sur classe: <code>Class.method()</code></td>
+        </tr>
+    </table>
+
+<div class="code-block"># METHODE DE CLASSE - Singleton (livemodel.py:320-337)
+@classmethod
+def singleton(cls, width=40, height=40):
+    if cls.__instance is None:
+        cls.__instance = cls(width, height)
+    return cls.__instance
+
+# Utilisation : model = LiveModel.singleton()
+
+# METHODE D'INSTANCE - evolve (livemodel.py:476)
+def evolve(self):
+    self.__update_neighbors_count()
+    self.__generation += 1
+
+# Utilisation : model.evolve()</div>
+</div>
+
+<!-- QUESTION 8 -->
+<h2 id="q8">Question 8 : Qu'est-ce qu'une composition ?</h2>
+
+<div class="reponse">
+    <div class="important">
+        <strong>Definition :</strong> Relation "contient" forte. L'objet contenu ne peut pas exister independamment. Quand le conteneur est detruit, les objets contenus le sont aussi.
+    </div>
+
+    <h3>Compositions dans notre projet</h3>
+
+    <h4>1. LiveModel contient LiveCell (livemodel.py:659-669)</h4>
+<div class="code-block">def __create_grid(self):
+    self.__grid = []
+    for row in range(self.__height):
+        row_cells = []
+        for col in range(self.__width):
+            row_cells.append(LiveCell(state=False))  # COMPOSITION
+        self.__grid.append(row_cells)</div>
+
+    <h4>2. LiveView contient Canvas et CommandBar (liveview.py:363-366)</h4>
+<div class="code-block">def create_canvas(self, width, height):
+    self.__canvas = LiveCanvas(self.__root, width, height)  # COMPOSITION</div>
+</div>
+
+<!-- QUESTION 9 -->
+<h2 id="q9">Question 9 : Classe abstraite en POO</h2>
+
+<div class="reponse">
+    <div class="important">
+        <strong>Definition :</strong> Classe qui ne peut pas etre instanciee directement. Sert de modele avec methodes abstraites (@abstractmethod) que les enfants doivent implementer.
+    </div>
+
+    <div class="localisation">
+        <strong>Classes abstraites dans notre projet :</strong><br>
+        - <code>Observer(ABC)</code> : livemodel.py:21-36<br>
+        - <code>Observable(ABC)</code> : livemodel.py:39-71<br>
+        - <code>ConfigurationStrategy(ABC)</code> : livemodel.py:83-98
+    </div>
+
+<div class="code-block">from abc import ABC, abstractmethod
+
+class ConfigurationStrategy(ABC):
+    """Classe abstraite - ne peut pas etre instanciee"""
+
+    @abstractmethod
+    def apply(self, model):
+        """Methode abstraite - DOIT etre implementee"""
+        pass
+
+class RandomStrategy(ConfigurationStrategy):
+    """Classe concrete - implemente apply()"""
+    def apply(self, model):
+        for row in range(model.height):
+            for col in range(model.width):
+                if random.random() < 0.25:
+                    model.grid[row][col].state = True</div>
+</div>
+
+<!-- QUESTION 10 -->
+<h2 id="q10">Question 10 : Modelisation d'une cellule</h2>
+
+<div class="reponse">
+    <p>La cellule est modelisee par <code>LiveCell</code> (livemodel.py:182-298).</p>
+
+    <h3>Attributs prives</h3>
+    <ul>
+        <li><code>__state</code> (bool) : Vivante/Morte</li>
+        <li><code>__age</code> (int) : Generations consecutives en vie</li>
+        <li><code>__neighbors_count</code> (int) : Voisins vivants (0-8)</li>
+        <li><code>__is_newly_born</code> (bool) : Vient de naitre</li>
+        <li><code>__is_long_lived</code> (bool) : Age >= 2</li>
+        <li><code>__will_die_next_gen</code> (bool) : Va mourir</li>
+    </ul>
+
+    <h3>Methodes</h3>
+<div class="code-block"># Constructeur (ligne 190)
+def __init__(self, state=False):
+    self.__state = state
+    self.__age = 0
+
+# Methode magique (ligne 206)
+def __str__(self):
+    return "1" if self.__state else "0"
+
+# Accesseurs avec @property (lignes 210-298)
+@property
+def state(self):
+    return self.__state</div>
+
+    <div class="important">
+        <strong>Note :</strong> La LOGIQUE du jeu (regles) est dans LiveModel, pas dans LiveCell. Cela respecte le principe de responsabilite unique.
+    </div>
+</div>
+
+<!-- QUESTION 11 -->
+<h2 id="q11">Question 11 : Design Pattern Observer</h2>
+
+<div class="reponse">
+    <p><strong>OUI</strong>, nous l'avons implante.</p>
+
+    <div class="localisation">
+        <strong>Localisations :</strong><br>
+        - Interface Observer : livemodel.py:21-36<br>
+        - Interface Observable : livemodel.py:39-71<br>
+        - Implementation LiveModel : livemodel.py:387-414<br>
+        - LiveController observe : livecontroller.py:43, 63-74
+    </div>
+
+<div class="code-block"># Interface (livemodel.py:21-36)
+class Observer(ABC):
+    @abstractmethod
+    def update(self, subject): pass
+
+# Observable notifie (livemodel.py:407-414)
+def notify_observers(self):
+    for observer in self.__observers:
+        observer.update(self)
+
+# Controller s'inscrit (livecontroller.py:43)
+self.__model.attach(self)
+
+# Controller reagit (livecontroller.py:63-74)
+def update(self, subject):
+    self.__update_display()</div>
+
+    <div class="important">
+        <strong>Avantages :</strong> Decouplage Model/Controller, extensibilite (autres observers possibles), mise a jour automatique de l'affichage.
+    </div>
+</div>
+
+<!-- QUESTION 12 -->
+<h2 id="q12">Question 12 : Design Pattern Strategy</h2>
+
+<div class="reponse">
+    <p><strong>OUI</strong>, nous l'avons implante.</p>
+
+    <div class="localisation">
+        <strong>Localisations :</strong><br>
+        - Interface : livemodel.py:83-98<br>
+        - EmptyStrategy : livemodel.py:101-112<br>
+        - RandomStrategy : livemodel.py:115-137<br>
+        - CannonStrategy : livemodel.py:140-175<br>
+        - Methode apply : livemodel.py:563-579
+    </div>
+
+<div class="code-block"># Interface Strategy (livemodel.py:83-98)
+class ConfigurationStrategy(ABC):
+    @abstractmethod
+    def apply(self, model): pass
+
+# Strategies concretes
+class RandomStrategy(ConfigurationStrategy):
+    def __init__(self, alive_percentage=0.25):
+        self.__alive_percentage = alive_percentage
+
+    def apply(self, model):
+        for row in range(model.height):
+            for col in range(model.width):
+                if random.random() < self.__alive_percentage:
+                    model.grid[row][col].state = True
+
+# Utilisation polymorphique
+model.apply_configuration_strategy(RandomStrategy(0.25))
+model.apply_configuration_strategy(CannonStrategy())</div>
+</div>
+
+<!-- QUESTION 13 -->
+<h2 id="q13">Question 13 : Design Pattern Factory</h2>
+
+<div class="reponse">
+    <p><strong>NON</strong>, nous ne l'avons pas explicitement implante.</p>
+
+    <h3>Ou le mettre</h3>
+<div class="code-block"># Factory pour differents types de cellules
+class CellFactory:
+    @staticmethod
+    def create_cell(cell_type):
+        if cell_type == "standard":
+            return LiveCell()
+        elif cell_type == "highlife":
+            return HighLifeCell()
+        elif cell_type == "daynight":
+            return DayNightCell()
+        raise ValueError(f"Unknown: {cell_type}")
+
+# Factory pour les strategies
+class StrategyFactory:
+    @staticmethod
+    def create_strategy(name, **kwargs):
+        strategies = {
+            "empty": EmptyStrategy,
+            "random": RandomStrategy,
+            "cannon": CannonStrategy,
+        }
+        return strategies[name](**kwargs)</div>
+</div>
+
+<!-- QUESTION 14 -->
+<h2 id="q14">Question 14 : Design Pattern Singleton</h2>
+
+<div class="reponse">
+    <p><strong>OUI</strong>, nous l'avons implante dans LiveModel.</p>
+
+    <div class="localisation">
+        <strong>Localisation :</strong> livemodel.py:318-337
+    </div>
+
+<div class="code-block">class LiveModel(Observable):
+    __instance = None  # Attribut de classe
+
+    @classmethod
+    def singleton(cls, width=40, height=40):
+        """Retourne l'unique instance"""
+        if cls.__instance is None:
+            cls.__instance = cls(width, height)
+        return cls.__instance
+
+# Utilisation :
+model1 = LiveModel.singleton(40, 40)  # Cree
+model2 = LiveModel.singleton()        # Retourne la meme
+print(model1 is model2)  # True</div>
+
+    <div class="warning">
+        <strong>Note :</strong> Dans main.py, nous utilisons le constructeur direct plutot que singleton(), mais la methode est disponible.
+    </div>
+</div>
+
+<!-- QUESTION 15 -->
+<h2 id="q15">Question 15 : Design Pattern Iterator</h2>
+
+<div class="reponse">
+    <p><strong>OUI</strong>, nous l'avons implante dans LiveCanvas.</p>
+
+    <div class="localisation">
+        <strong>Localisation :</strong><br>
+        - Methode : liveview.py:249-264<br>
+        - Utilisation : liveview.py:192
+    </div>
+
+<div class="code-block"># Iterator avec generateur Python (liveview.py:249-264)
+def __grid_iterator(self, grid):
+    """ITERATOR PATTERN: parcourt la grille avec yield"""
+    for row in range(len(grid)):
+        for col in range(len(grid[row])):
+            yield (row, col, grid[row][col])
+
+# Utilisation propre (liveview.py:192)
+def display_grid(self, grid):
+    for row, col, cell in self.__grid_iterator(grid):
+        self.draw_cell(row, col, cell)</div>
+
+    <div class="important">
+        <strong>Avantages :</strong> Abstraction de la structure 2D, evaluation lazy (memoire), code lisible.
+    </div>
+</div>
+
+<!-- QUESTION 16 -->
+<h2 id="q16">Question 16 : Refactorisation</h2>
+
+<div class="reponse">
+    <h3>Partie a refactoriser : Gestion des couleurs</h3>
+
+    <p><strong>Probleme actuel :</strong> Couleurs en dur dans un dictionnaire, logique if/elif dans draw_cell().</p>
+
+<div class="code-block"># ACTUEL (liveview.py:138-167) - Problematique
+if cell_obj.is_newly_born and cell_obj.will_die_next_gen:
+    fill_color = self.__colors['color_born_and_die']
+elif cell_obj.is_newly_born:
+    fill_color = self.__colors['color_newly_born']
+# ... etc</div>
+
+    <h3>Refactorisation proposee</h3>
+<div class="code-block"># Classe ColorScheme
+class ColorScheme:
+    def __init__(self):
+        self.dead = 'white'
+        self.newly_born = '#44DD44'
+        self.long_lived = '#4444FF'
+        # ...
+
+    def get_color_for_cell(self, cell):
+        """Encapsule la logique de couleur"""
+        if not cell.state:
+            return self.dead
+        if cell.is_newly_born and cell.will_die_next_gen:
+            return self.born_and_die
+        # ...
+
+# Themes possibles
+class DarkColorScheme(ColorScheme):
+    def __init__(self):
+        super().__init__()
+        self.dead = '#1a1a1a'</div>
+</div>
+
+<!-- QUESTION 17 -->
+<h2 id="q17">Question 17 : Points faibles et ameliorations</h2>
+
+<div class="reponse">
+    <h3>Points faibles identifies</h3>
+    <ol>
+        <li><strong>Pas d'interface pour changer les couleurs</strong> - set_colors() existe mais pas de bouton</li>
+        <li><strong>Singleton non utilise</strong> dans main.py</li>
+        <li><strong>Pas de gestion d'erreurs</strong> - pas de try/except</li>
+        <li><strong>Bouton "Random"</strong> au lieu de "Alea"</li>
+        <li><strong>Pas de sauvegarde/chargement</strong> de configurations</li>
+    </ol>
+
+    <h3>Ameliorations prioritaires</h3>
+<div class="code-block"># 1. Ajouter bouton couleur
+def on_change_color(self):
+    color = colorchooser.askcolor()
+    if color[1]:
+        self.__view.canvas.set_colors(born_color=color[1])
+
+# 2. Ajouter validation
+def on_change_speed(self, speed_text):
+    try:
+        speed = int(speed_text)
+        if speed < 10:
+            raise ValueError("Vitesse trop basse")
+        self.__animation_speed = speed
+    except ValueError as e:
+        messagebox.showerror("Erreur", str(e))</div>
+</div>
+
+<!-- QUESTION 18 -->
+<h2 id="q18">Question 18 : Nouvelle famille de cellules</h2>
+
+<div class="reponse">
+    <p>Utiliser <strong>heritage</strong> et <strong>polymorphisme</strong>.</p>
+
+<div class="code-block"># Etape 1 : Classe abstraite
+class AbstractCell(ABC):
+    @abstractmethod
+    def should_survive(self, neighbors): pass
+
+    @abstractmethod
+    def should_be_born(self, neighbors): pass
+
+# Etape 2 : Implementations specifiques
+class StandardCell(AbstractCell):
+    """Game of Life classique (B3/S23)"""
+    def should_survive(self, n): return n in [2, 3]
+    def should_be_born(self, n): return n == 3
+
+class HighLifeCell(AbstractCell):
+    """HighLife (B36/S23)"""
+    def should_survive(self, n): return n in [2, 3]
+    def should_be_born(self, n): return n in [3, 6]
+
+class DayNightCell(AbstractCell):
+    """Day&Night (B3678/S34678)"""
+    def should_survive(self, n): return n in [3,4,6,7,8]
+    def should_be_born(self, n): return n in [3,6,7,8]
+
+# Etape 3 : Factory
+class CellFactory:
+    @staticmethod
+    def create_cell(cell_type):
+        types = {"standard": StandardCell, "highlife": HighLifeCell}
+        return types[cell_type]()</div>
+</div>
+
+<!-- QUESTION 19 -->
+<h2 id="q19">Question 19 : Systeme de log</h2>
+
+<div class="reponse">
+<div class="code-block"># Implementation avec module logging
+import logging
+
+logging.basicConfig(
+    filename='gameoflife.log',
+    level=logging.INFO,
+    format='%(asctime)s - %(levelname)s - %(message)s'
+)
+logger = logging.getLogger('GameOfLife')
+
+# Dans LiveModel
+def evolve(self):
+    logger.info(f"Generation {self.__generation}: evolving")
+
+# OU avec Observer Pattern
+class LogObserver(Observer):
+    def __init__(self, log_file='game.log'):
+        self.__logger = logging.getLogger('GameOfLife')
+
+    def update(self, subject):
+        self.__logger.info(f"Gen {subject.generation}")
+
+# Utilisation
+model.attach(LogObserver('game.log'))</div>
+</div>
+
+<!-- QUESTION 20 -->
+<h2 id="q20">Question 20 : Deux systemes de GUI</h2>
+
+<div class="reponse">
+    <p>Utiliser <strong>Abstract Factory</strong> ou <strong>Strategy</strong> pour la Vue.</p>
+
+<div class="code-block"># Interface abstraite
+class AbstractView(ABC):
+    @abstractmethod
+    def create_canvas(self, w, h): pass
+    @abstractmethod
+    def mainloop(self): pass
+
+# Implementation TkInter
+class TkinterView(AbstractView):
+    def __init__(self, title):
+        self.__root = Tk()
+    def mainloop(self):
+        self.__root.mainloop()
+
+# Implementation PyQt
+class PyQtView(AbstractView):
+    def __init__(self, title):
+        self.__app = QApplication([])
+    def mainloop(self):
+        self.__app.exec_()
+
+# Factory
+class ViewFactory:
+    @staticmethod
+    def create_view(framework, title):
+        views = {"tkinter": TkinterView, "pyqt": PyQtView}
+        return views[framework](title)
+
+# main.py - Le Controller ne change pas !
+view = ViewFactory.create_view("tkinter", "Game of Life")</div>
+</div>
+
+<!-- QUESTION 21 -->
+<h2 id="q21">Question 21 : Consignes non implantees</h2>
+
+<div class="reponse">
+    <div class="warning">
+        <strong>INTERFACE POUR MODIFIER LES COULEURS</strong><br>
+        La consigne dit : "L'utilisateur peut modifier la couleur des cellules ou de la grille."<br><br>
+        <strong>Etat actuel :</strong>
+        <ul>
+            <li>set_colors() existe (liveview.py:77-98)</li>
+            <li>colorchooser importe (liveview.py:13)</li>
+            <li>MAIS aucun bouton/menu pour l'utilisateur</li>
+        </ul>
+    </div>
+
+    <h3>Solution</h3>
+<div class="code-block"># Ajouter dans livecontroller.py
+command_bar.create_button("Couleur", self.on_change_color)
+
+def on_change_color(self):
+    from tkinter import colorchooser
+    color = colorchooser.askcolor(title="Couleur cellules")
+    if color[1]:
+        self.__view.canvas.set_colors(surviving_color=color[1])
+        self.__update_display()</div>
+
+    <p><strong>Autre point mineur :</strong> Bouton "Random" au lieu de "Alea".</p>
+</div>
+
+<!-- QUESTION 22 -->
+<h2 id="q22">Question 22 : Gestion des erreurs</h2>
+
+<div class="reponse">
+    <h3>Gestion actuelle</h3>
+<div class="code-block"># Validation des bornes (livemodel.py:431-433)
+def get_cell_state(self, row, col):
+    if 0 <= row < self.__height and 0 <= col < self.__width:
+        return self.__grid[row][col].state
+    return False  # Hors limites
+
+# Try/except pour vitesse (livecontroller.py:153-166)
+def on_change_speed(self, speed_text):
+    try:
+        new_speed = int(speed_text)
+        if new_speed > 0:
+            self.__animation_speed = new_speed
+    except ValueError:
+        print("Invalid speed value")</div>
+
+    <h3>Ameliorations possibles</h3>
+<div class="code-block"># Exceptions personnalisees
+class GameOfLifeError(Exception): pass
+class InvalidCellPositionError(GameOfLifeError): pass
+
+# Utilisation
+def toggle_cell(self, row, col):
+    if not (0 <= row < self.__height and 0 <= col < self.__width):
+        raise InvalidCellPositionError(f"({row},{col}) invalide")
+
+# Affichage utilisateur
+from tkinter import messagebox
+try:
+    model.toggle_cell(100, 100)
+except InvalidCellPositionError as e:
+    messagebox.showerror("Erreur", str(e))</div>
+</div>
+
+<!-- QUESTION 23 -->
+<h2 id="q23">Question 23 : Types d'exceptions definies</h2>
+
+<div class="reponse">
+    <p>Nous n'avons <strong>PAS</strong> defini d'exceptions personnalisees. Les erreurs sont gerees par if/else.</p>
+
+    <h3>Exceptions qu'on pourrait definir</h3>
+<div class="code-block">class GameOfLifeError(Exception):
+    """Exception de base"""
+    pass
+
+class InvalidCellPositionError(GameOfLifeError):
+    """Position hors limites"""
+    def __init__(self, row, col, max_row, max_col):
+        self.message = f"({row},{col}) invalide. Max: ({max_row-1},{max_col-1})"
+
+class InvalidSpeedError(GameOfLifeError):
+    """Vitesse invalide"""
+    pass
+
+class GridSizeError(GameOfLifeError):
+    """Taille grille invalide"""
+    pass</div>
+</div>
+
+<!-- QUESTION 24 -->
+<h2 id="q24">Question 24 : Description du Model MVC</h2>
+
+<div class="reponse">
+    <p>Le <strong>MODEL</strong> gere les <strong>DONNEES</strong> et la <strong>LOGIQUE METIER</strong>.</p>
+
+    <h3>Responsabilites</h3>
+    <ul>
+        <li>Stocker la grille de cellules (<code>self.__grid</code>)</li>
+        <li>Contenir la logique du jeu (evolve, count_neighbors)</li>
+        <li>Utiliser des indices standards (0, 1, 2...)</li>
+        <li>Notifier les observers lors des changements</li>
+    </ul>
+
+    <h3>Ce que le Model NE fait PAS</h3>
+    <ul>
+        <li>Affichage (pas de Tkinter)</li>
+        <li>Gestion des evenements utilisateur</li>
+        <li>Conversion en pixels</li>
+    </ul>
+
+    <h3>Classes du Model</h3>
+    <ul>
+        <li><code>LiveCell</code> : Represente une cellule</li>
+        <li><code>LiveModel</code> : Gere la grille et la logique</li>
+        <li><code>ConfigurationStrategy</code> et enfants : Pattern Strategy</li>
+        <li><code>Observer/Observable</code> : Interfaces Observer</li>
+    </ul>
+</div>
+
+<!-- QUESTION 25 -->
+<h2 id="q25">Question 25 : Description du Controller MVC</h2>
+
+<div class="reponse">
+    <p>Le <strong>CONTROLLER</strong> <strong>COORDONNE</strong> Model et View.</p>
+
+    <h3>Responsabilites</h3>
+    <ul>
+        <li>Gerer les evenements utilisateur (on_start, on_click...)</li>
+        <li>Traduire les actions utilisateur en appels Model</li>
+        <li>Mettre a jour la View apres changements</li>
+        <li>Gerer l'animation (boucle avec after())</li>
+    </ul>
+
+    <h3>Structure</h3>
+<div class="code-block">class LiveController(Observer):
+    def __init__(self, model, view):
+        self.__model = model      # Reference Model
+        self.__view = view        # Reference View
+        self.__model.attach(self) # S'inscrit comme Observer
+
+    def update(self, subject):
+        """Appele quand Model change"""
+        self.__update_display()
+
+    def run(self):
+        self.__view.mainloop()</div>
+</div>
+
+<!-- QUESTION 26 -->
+<h2 id="q26">Question 26 : Description du View MVC</h2>
+
+<div class="reponse">
+    <p>La <strong>VIEW</strong> gere l'<strong>AFFICHAGE</strong> et l'<strong>INTERFACE</strong>.</p>
+
+    <h3>Responsabilites</h3>
+    <ul>
+        <li>Afficher la grille (dessiner cellules et lignes)</li>
+        <li>Convertir indices en pixels</li>
+        <li>Afficher les controles (boutons, champs)</li>
+        <li>Capturer les evenements (clics, boutons)</li>
+    </ul>
+
+    <h3>Classes de la View</h3>
+    <ul>
+        <li><code>LiveCanvas</code> : Grille, draw_cell(), Iterator</li>
+        <li><code>LiveCommandBar</code> : Boutons de commande</li>
+        <li><code>LiveView</code> : Fenetre principale, contient les autres (Composition)</li>
+    </ul>
+
+    <h3>Ce que la View NE fait PAS</h3>
+    <ul>
+        <li>Logique du jeu (pas de regles)</li>
+        <li>Stockage des donnees</li>
+        <li>Decisions sur l'etat</li>
+    </ul>
+</div>
+
+<!-- QUESTION 27 -->
+<h2 id="q27">Question 27 : Code a optimiser</h2>
+
+<div class="reponse">
+    <h3>1. Redessin complet a chaque frame</h3>
+<div class="code-block"># ACTUEL (liveview.py:175-196) - Lent
+def display_grid(self, grid):
+    self.clear()  # Efface TOUT
+    for row, col, cell in self.__grid_iterator(grid):
+        self.draw_cell(row, col, cell)  # Redessine TOUT
+
+# OPTIMISE - Ne redessiner que les changements
+def display_grid_optimized(self, grid, changed_cells):
+    for row, col in changed_cells:
+        self.draw_cell(row, col, grid[row][col])</div>
+
+    <h3>2. Double calcul des voisins</h3>
+<div class="code-block"># ACTUEL (livemodel.py:491, 544)
+def evolve(self):
+    self.__update_neighbors_count()  # Premier calcul
+    # ... regles
+    self.__update_neighbors_count()  # Deuxieme calcul !
+
+# OPTIMISE - Un seul calcul</div>
+
+    <h3>3. Creation d'objets dans la boucle</h3>
+<div class="code-block"># ACTUEL - Cree nouveaux rectangles a chaque fois
+canvas.create_rectangle(...)
+
+# OPTIMISE - Reutiliser les rectangles existants
+canvas.itemconfig(self.__rectangles[row][col], fill=color)</div>
+
+    <h3>4. Pas de cache pour les offsets voisins</h3>
+<div class="code-block"># OPTIMISE - Pre-calculer
+NEIGHBOR_OFFSETS = [
+    (-1,-1), (-1,0), (-1,1),
+    (0,-1),          (0,1),
+    (1,-1),  (1,0),  (1,1)
+]</div>
+
+    <div class="important">
+        <strong>Note :</strong> Pour une grille 40x40, ces optimisations ne sont pas critiques. Pour 1000x1000, elles deviendraient necessaires.
+    </div>
+</div>
+
+</body>
+</html>
